@@ -1,0 +1,40 @@
+# API Framework
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic-settings
+
+# Database
+sqlalchemy
+alembic
+psycopg2-binary
+
+# Vector Search & ML
+pinecone-client
+sentence-transformers
+numpy
+pandas
+scikit-learn
+
+# HTTP Client
+httpx
+
+# Development
+black
+isort
+flake8
+pytest
+pytest-asyncio
+mypy
+
+# Utils
+python-dotenv
+pyyaml
+
+# API Clients
+arxiv
+biopython  # for PubMed
+semanticscholar  # for Semantic Scholar
+tenacity  # for retry logic
+aiohttp  # async HTTP
+asyncio-throttle  # rate limiting
