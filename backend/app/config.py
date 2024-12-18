@@ -6,8 +6,16 @@ load_dotenv()
 
 class Settings(BaseSettings):
     PINECONE_API_KEY: str
-    PINECONE_INDEX: str = "querie"
-    ARXIV_RATE_LIMIT: float = Field(default=3.0)  # 3 seconds between requests
+    PINECONE_INDEX: str
+
+    # Arxiv Settings
+    ARXIV_RATE_LIMIT: float = Field(default=3.0)
+    
+    # PubMed Settings
+    PUBMED_EMAIL: str = Field(default="")  # Made optional with default empty string
+    PUBMED_API_KEY: str = Field(default="")  # Optional
+    PUBMED_RATE_LIMIT: float = Field(default=0.34)  # NCBI allows 3 requests/second
+    
     MAX_WORKERS: int = Field(default=4)
 
     class Config:

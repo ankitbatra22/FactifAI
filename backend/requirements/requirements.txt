@@ -41,6 +41,8 @@ click==8.1.7
     # via
     #   black
     #   uvicorn
+easy-entrez==0.3.7
+    # via -r requirements/requirements.in
 fastapi==0.115.6
     # via -r requirements/requirements.in
 feedparser==6.0.11
@@ -193,6 +195,7 @@ regex==2024.11.6
 requests==2.32.3
     # via
     #   arxiv
+    #   easy-entrez
     #   huggingface-hub
     #   transformers
 safetensors==0.4.5
@@ -245,6 +248,7 @@ typing-extensions==4.12.2
     # via
     #   alembic
     #   anyio
+    #   easy-entrez
     #   fastapi
     #   huggingface-hub
     #   mypy

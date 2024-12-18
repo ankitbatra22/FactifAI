@@ -38,3 +38,4 @@ semanticscholar  # for Semantic Scholar
 tenacity  # for retry logic
 aiohttp  # async HTTP
 asyncio-throttle  # rate limiting
+easy-entrez  # for PubMed
