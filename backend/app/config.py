@@ -13,10 +13,14 @@ class Settings(BaseSettings):
     
     # PubMed Settings
     PUBMED_EMAIL: str = Field(default="")  # Made optional with default empty string
-    PUBMED_API_KEY: str = Field(default="")  # Optional
+    #PUBMED_API_KEY: str = Field(default="")  # Optional
     PUBMED_RATE_LIMIT: float = Field(default=0.34)  # NCBI allows 3 requests/second
     
     MAX_WORKERS: int = Field(default=4)
+
+    # Semantic Scholar Settings
+    SEMANTIC_SCHOLAR_API_KEY: str = Field(default="")
+    SEMANTIC_SCHOLAR_RATE_LIMIT: float = Field(default=100.0)  # 100 requests per 5 minutes
 
     class Config:
         env_file = ".env"
