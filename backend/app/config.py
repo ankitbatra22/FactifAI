@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings(BaseSettings):
+    # Pinecone Settings
     PINECONE_API_KEY: str
     PINECONE_INDEX: str
 
@@ -21,6 +22,9 @@ class Settings(BaseSettings):
     # Semantic Scholar Settings
     SEMANTIC_SCHOLAR_API_KEY: str = Field(default="")
     SEMANTIC_SCHOLAR_RATE_LIMIT: float = Field(default=100.0)  # 100 requests per 5 minutes
+
+    # OpenAI Settings
+    OPENAI_API_KEY: str
 
     # Crossref Settings
     CROSSREF_EMAIL: str = "your-email@example.com"
