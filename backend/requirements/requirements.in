@@ -15,6 +15,7 @@ sentence-transformers
 numpy
 pandas
 scikit-learn
+openai
 
 # HTTP Client
 httpx
