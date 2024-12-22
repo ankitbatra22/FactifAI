@@ -39,3 +39,6 @@ tenacity  # for retry logic
 aiohttp  # async HTTP
 asyncio-throttle  # rate limiting
 easy-entrez  # for PubMed
+
+# Search
+beautifulsoup4

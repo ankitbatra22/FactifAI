@@ -6,6 +6,10 @@ from app.services.embeddings import EmbeddingService
 from app.config import settings
 from app.services.ingestion.sources.arxiv import ArxivConnector
 from app.services.ingestion.sources.pubmed import PubMedConnector
+from app.services.ingestion.sources.crossref import CrossrefConnector
+from app.services.ingestion.sources.open_alex import OpenAlexConnector
+
+# TODO: Future Sources
 # from app.services.ingestion.sources.semantic_scholar import SemanticScholarConnector
 # from app.services.ingestion.sources.science_direct import ScienceDirectConnector
 # from app.services.ingestion.sources.springer import SpringerConnector
@@ -17,6 +21,9 @@ class SearchPipeline:
     sources = {
         'arxiv': ArxivConnector(),          # ~100 results
         'pubmed': PubMedConnector(),        # ~100 results
+        'crossref': CrossrefConnector(),    # ~100 results
+        'open_alex': OpenAlexConnector(),  # ~100 results
+        # TODO: Future Sources
         # 'semantic_scholar': SemanticScholarConnector(),  # ~100 results
         # 'science_direct': ScienceDirectConnector(),  # ~100 results
         # 'springer': SpringerConnector(),     # ~100 results

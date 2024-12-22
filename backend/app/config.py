@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     SEMANTIC_SCHOLAR_API_KEY: str = Field(default="")
     SEMANTIC_SCHOLAR_RATE_LIMIT: float = Field(default=100.0)  # 100 requests per 5 minutes
 
+    # Crossref Settings
+    CROSSREF_EMAIL: str = "your-email@example.com"
+    CROSSREF_RATE_LIMIT: float = 1.0  # requests per second
+
     class Config:
         env_file = ".env"
 
