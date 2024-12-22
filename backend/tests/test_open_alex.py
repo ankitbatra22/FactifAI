@@ -16,7 +16,6 @@ async def open_alex_connector():
         yield connector
         if connector.session:
             await connector.session.close()
-            g
 
 @pytest.mark.asyncio
 async def test_real_open_alex_search(open_alex_connector):
