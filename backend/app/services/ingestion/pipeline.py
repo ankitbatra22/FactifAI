@@ -23,6 +23,7 @@ class SearchPipeline:
         'pubmed': PubMedConnector(),        # ~100 results
         'crossref': CrossrefConnector(),    # ~100 results
         'open_alex': OpenAlexConnector(),  # ~100 results
+        
         # TODO: Future Sources
         # 'semantic_scholar': SemanticScholarConnector(),  # ~100 results
         # 'science_direct': ScienceDirectConnector(),  # ~100 results
@@ -93,11 +94,6 @@ class SearchPipeline:
         for source_name, connector in self.sources.items():
             # Adjust max_results based on source
             max_results = 100
-            if source_name == 'wikipedia':
-                max_results = 20
-            elif source_name == 'news_api':
-                max_results = 50
-                
             task = self._fetch_from_source(
                 source_name=source_name, 
                 connector=connector, 

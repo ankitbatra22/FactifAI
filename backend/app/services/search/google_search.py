@@ -46,6 +46,19 @@ class GoogleSearchService:
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15"
     ]
     
+    # Add this near the top with other class variables
+    EXCLUDED_URL_PATTERNS = [
+        # Discussion/Forum indicators
+        'forum', 'thread', 'discussion', 'community', 'comments',
+        'board', 'topic', 'message', 'chat', 'conversation', 'talk',
+        
+        # Social/Q&A
+        'reddit', 'quora', 'answers', 'ask',
+        
+        # User-generated content
+        'blog', 'post', 'question', 'responses', 'replies'
+    ]
+    
     def __init__(self, 
                  language: str = "en", 
                  country: str = "US", 
@@ -81,9 +94,20 @@ class GoogleSearchService:
             logger.error(f"Error extracting domain from {url}: {str(e)}")
             return ''
 
-    def is_valid_source(self, domain: str) -> bool:
-        """Check if the source domain is valid (not in excluded list)"""
-        return domain not in self.EXCLUDED_DOMAINS
+    def is_valid_source(self, url: str) -> bool:
+        """Check if the source URL is valid (not in excluded list and no bad patterns)"""
+        # Extract domain and check against excluded list
+        domain = self.extract_domain(url)
+        if domain in self.EXCLUDED_DOMAINS:
+            return False
+            
+        # Check entire URL (including path) for excluded patterns
+        url_lower = url.lower()
+        if any(pattern in url_lower for pattern in self.EXCLUDED_URL_PATTERNS):
+            logger.debug(f"Excluding URL due to pattern match: {url}")
+            return False
+            
+        return True
 
     def save_debug_html(self, html: str, prefix: str = "google_response"):
         """Save HTML response for debugging"""
@@ -219,6 +243,11 @@ class GoogleSearchService:
                     logger.debug("No valid link element found")
                     continue
                 link = link_elem['href']
+                
+                # Validate entire URL, not just domain
+                if not self.is_valid_source(link):
+                    logger.debug(f"Invalid source URL: {link}")
+                    continue
                 
                 # Try different snippet selectors
                 snippet = ''
