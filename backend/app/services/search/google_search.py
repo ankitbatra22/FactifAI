@@ -35,7 +35,7 @@ class GoogleSearchService:
         'tiktok.com', 'youtube.com', 'medium.com', 'linkedin.com',
         'towardsdatascience.com', 'wikihow.com', 'wikipedia.org',
         'yahoo.answers.com', 'answers.com', 'answers.yahoo.com',
-
+        'buzzfeed.com', 'boredpanda.com', 'huffpost.com'
     }
     
     # Rotating set of common user agents
@@ -53,7 +53,7 @@ class GoogleSearchService:
         'board', 'topic', 'message', 'chat', 'conversation', 'talk',
         
         # Social/Q&A
-        'reddit', 'quora', 'answers', 'ask',
+        'reddit', 'quora', 'answers', 'ask', 'stackexchange',
         
         # User-generated content
         'blog', 'post', 'question', 'responses', 'replies'

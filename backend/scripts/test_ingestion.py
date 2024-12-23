@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from app.services.ingestion import IngestionService
+from app.services.ingestion.ingestion import IngestionService
 
 # Sample research papers about cow social behavior
 sample_papers = [

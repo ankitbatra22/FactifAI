@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from app.services.search import SearchService
+from app.services.search.search import SearchService
 
 async def main():
     search_service = SearchService()

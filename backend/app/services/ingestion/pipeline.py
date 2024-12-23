@@ -3,6 +3,8 @@ import asyncio
 from datetime import datetime
 from pinecone import Pinecone
 from app.services.embeddings import EmbeddingService
+from app.services.search.search import SearchService
+from app.services.ingestion.sources.base import BaseSourceConnector
 from app.config import settings
 from app.services.ingestion.sources.arxiv import ArxivConnector
 from app.services.ingestion.sources.pubmed import PubMedConnector
@@ -71,7 +73,7 @@ class SearchPipeline:
     async def _fetch_from_source(
         self, 
         source_name: str, 
-        connector, 
+        connector: BaseSourceConnector, 
         query: str,
         max_results: int = 100  # Default to 100 results per source
     ) -> List[Dict]:

@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     CROSSREF_EMAIL: str = "your-email@example.com"
     CROSSREF_RATE_LIMIT: float = 1.0  # requests per second
 
+    # OpenAlex Settings
+    OPEN_ALEX_RATE_LIMIT: int = 10
+    OPEN_ALEX_EMAIL: str = "your-email@example.com"
+
     class Config:
         env_file = ".env"
 

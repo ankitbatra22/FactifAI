@@ -3,6 +3,7 @@ import arxiv
 from datetime import datetime
 from app.services.ingestion.sources.base import BaseSourceConnector
 from app.config import settings
+import asyncio
 
 class ArxivConnector(BaseSourceConnector):
     def __init__(self):
@@ -11,57 +12,50 @@ class ArxivConnector(BaseSourceConnector):
         self.base_url = "http://export.arxiv.org/api/query"
         
     async def fetch_papers(self, query: str, max_results: int = 2000) -> List[Dict]:
-        """
-        Fetch papers from ArXiv based on query
-        Args:
-            query: Search query
-            max_results: Maximum number of results (up to 2000 per request)
-        """
+        print(f"ArxivConnector: Starting fetch for query: {query}")
         try:
-            # Configure search client
+            print("ArxivConnector: Configuring search client...")
             search = arxiv.Search(
                 query=query,
-                max_results=min(max_results, 2000),  # Respect ArXiv's limit
-                sort_by=arxiv.SortCriterion.Relevance,  # Sort by relevance
+                max_results=min(max_results, 20),  # Start with just 20 results for speed
+                sort_by=arxiv.SortCriterion.Relevance,
                 sort_order=arxiv.SortOrder.Descending
             )
             
+            print("ArxivConnector: Starting to fetch results...")
             documents = []
-            for paper in search.results():
-                documents.append({
-                    'id': f"arxiv_{paper.entry_id.split('/')[-1]}",
-                    'title': paper.title,
-                    'content': (
-                        f"Abstract: {paper.summary}\n\n"
-                        f"Authors: {', '.join(author.name for author in paper.authors)}\n"
-                        f"Categories: {', '.join(paper.categories)}\n"
-                        f"Published: {paper.published.strftime('%Y-%m-%d')}"
-                    ),
-                    'url': paper.entry_id,
-                    'source': 'arxiv',
-                    'metadata': {
-                        'authors': [author.name for author in paper.authors],
-                        'categories': paper.categories,
-                        'published_date': paper.published.isoformat(),
-                        'updated_date': paper.updated.isoformat(),
-                        'doi': paper.doi,
-                        'primary_category': paper.primary_category,
-                        'comment': paper.comment,
-                        'journal_ref': paper.journal_ref if hasattr(paper, 'journal_ref') else None
-                    }
-                })
-                
-                if len(documents) >= max_results:
-                    break
-                    
-                # Respect rate limit between paper fetches
-                await self.rate_limit_wait()
             
-            print(f"ArXiv returned {len(documents)} results for query: {query}")
+            try:
+                async with asyncio.timeout(5):  # Quick 5-second timeout for initial results
+                    for paper in search.results():
+                        print(f"ArxivConnector: Processing paper {len(documents) + 1}")
+                        documents.append({
+                            'id': f"arxiv_{paper.entry_id.split('/')[-1]}",
+                            'title': paper.title,
+                            'content': (
+                                f"Abstract: {paper.summary}\n\n"
+                                f"Authors: {', '.join(author.name for author in paper.authors)}\n"
+                                f"Categories: {', '.join(paper.categories)}\n"
+                                f"Published: {paper.published.strftime('%Y-%m-%d')}"
+                            ),
+                            'url': paper.entry_id,
+                            'source': 'arxiv'
+                        })
+                        
+                        if len(documents) >= 20:  # Fast return with initial results
+                            break
+                            
+                        await self.rate_limit_wait()
+            
+            except asyncio.TimeoutError:
+                print("ArxivConnector: Initial fetch timed out after 5 seconds")
+            
+            print(f"ArxivConnector: Completed with {len(documents)} documents")
             return documents
             
         except Exception as e:
-            print(f"Error fetching from ArXiv: {str(e)}")
+            print(f"ArxivConnector Error: {str(e)}")
+            print(f"ArxivConnector Error type: {type(e)}")
             return []
 
     def _clean_text(self, text: str) -> str:

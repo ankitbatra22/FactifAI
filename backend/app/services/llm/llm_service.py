@@ -2,18 +2,7 @@ from typing import List, Optional
 from openai import AsyncOpenAI
 from app.services.search.google_search import GoogleSearchResult
 from app.config import settings
-from pydantic import BaseModel
-
-class Finding(BaseModel):
-    """A research finding with its source link"""
-    text: str
-    source_url: str
-
-class ResearchSummary(BaseModel):
-    """Research summary with key findings"""
-    summary: str
-    findings: List[Finding]
-    error: Optional[str] = None
+from app.schemas.research_summary import ResearchSummary
 
 class LLMService:
     """Service to generate research summaries from search results"""

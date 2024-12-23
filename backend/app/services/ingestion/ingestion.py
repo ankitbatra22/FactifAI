@@ -19,7 +19,7 @@ class IngestionService:
         # Metadata to store
         metadata = {
             "title": paper["title"],
-            "abstract": paper["abstract"][:1000],  # Limit abstract length
+            "abstract": paper["abstract"][:1400],  # Limit abstract length
             "url": paper["url"]
         }
         
