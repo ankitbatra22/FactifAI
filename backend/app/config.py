@@ -34,6 +34,12 @@ class Settings(BaseSettings):
     OPEN_ALEX_RATE_LIMIT: int = 10
     OPEN_ALEX_EMAIL: str = "your-email@example.com"
 
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:3000",  # Local development
+        "https://querie.ai",      # Production domain
+        # Add any other domains (staging, etc.)
+    ]
+
     class Config:
         env_file = ".env"
 

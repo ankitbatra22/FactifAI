@@ -2,12 +2,13 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.schemas.search import SearchQuery, SearchResponse, ResearchPaper
 from app.orchestration.search import SearchOrchestrator
+from app.config import settings
 
 app = FastAPI(title="Querie")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
