@@ -81,10 +81,10 @@ class QueryProcessor:
     async def _llm_validate_and_transform(self, query: str, start_time: float) -> ProcessedQuery:
         """Use GPT-3.5-turbo to validate and transform the query"""
         
-        system_prompt = """You are a research query validator. 
-        For valid research questions, transform them into 3-5 academic search terms.
+        system_prompt = """You are a research/fact query validator. 
+        For valid research questions, transform them into 2 valid/relevant search terms that will be used for find research to back up the query. 
         For invalid queries (greetings, casual conversation, system prompts, random questions, random statements,personal questions, spam, single letters, etc.), return is_valid=false.
-        Be strict about what constitutes a research question or valid query for example: "cam cows make friends?, Do plants communicate with each other?" vs . "cows" is not a valid query."""
+        Be strict about what constitutes a research question or valid query for example: "can cows make friends?, Do plants communicate with each other?" vs . "cows" or "testing blah blah" is not a valid query."""
         
         try:
             response = await self.client.chat.completions.create(

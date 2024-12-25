@@ -75,7 +75,7 @@ class SearchPipeline:
         source_name: str, 
         connector: BaseSourceConnector, 
         query: str,
-        max_results: int = 100  # Default to 100 results per source
+        max_results: int = 50  # Default to 100 results per source
     ) -> List[Dict]:
         """
         Fetch up to max_results from a single source

@@ -8,7 +8,7 @@ class ProcessedQueryLLM(BaseModel):
         None,
         description="List of academic search terms derived from the query. Only provide if is_valid=true.",
         min_items=1,
-        max_items=5
+        max_items=2,
     )
 
 class ProcessedQuery(BaseModel):

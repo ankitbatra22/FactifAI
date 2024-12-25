@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List
-
+from app.schemas.research_summary import ResearchSummary
 class SearchQuery(BaseModel):
     query: str
 
@@ -11,4 +11,6 @@ class ResearchPaper(BaseModel):
     confidence: float
 
 class SearchResponse(BaseModel):
-    results: List[ResearchPaper]
+    papers: List[ResearchPaper]
+    web_summary: ResearchSummary
+    
