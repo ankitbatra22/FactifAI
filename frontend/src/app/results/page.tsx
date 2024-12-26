@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
-import { SearchLoading } from '@/components/search/SearchLoading';
+import { SearchLoading } from '../../components/search/SearchLoading';
 import { searchPapers } from '@/lib/api';
 import type { SearchResponse } from '@/types/search';
 
