@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import type { SearchResponse, ResearchPaper } from '@/types/search';
+import { useRouter } from 'next/navigation';
 
 interface SearchResultsProps {
   results: SearchResponse;
@@ -10,9 +11,44 @@ interface SearchResultsProps {
 
 export function SearchResults({ results }: SearchResultsProps) {
   const [activeTab, setActiveTab] = useState<'papers' | 'web'>('web');
+  const router = useRouter();
 
   return (
     <div className="mt-8 space-y-6">
+      {/* Query and Try Another Button */}
+      <div className="flex justify-between items-center">
+        <div className="space-y-2">
+          <h1 className="text-2xl font-medium text-white/90">
+            {/* Query would be passed as prop if needed */}
+          </h1>
+          <p className="text-sm text-gray-400">
+            Research-backed answer
+          </p>
+        </div>
+        <button
+          onClick={() => router.push('/')}
+          className="px-4 py-2 text-sm font-medium text-gray-300 
+                     bg-[#2A2A2A] rounded-lg
+                     hover:bg-[#333333] transition-colors
+                     flex items-center gap-2"
+        >
+          <span>Try Another Search</span>
+          <svg 
+            className="w-4 h-4" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              strokeWidth={2} 
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
+            />
+          </svg>
+        </button>
+      </div>
+
       {/* Tab Navigation */}
       <div className="flex gap-4 border-b border-gray-800">
         <button
@@ -118,11 +154,6 @@ function PapersList({ papers }: { papers: ResearchPaper[] }) {
             <p className="text-sm text-gray-400">
               {paper.summary}
             </p>
-            <div className="flex items-center gap-2 mt-1">
-              <div className="text-xs px-2 py-1 bg-gray-700 rounded text-gray-300">
-                Confidence: {(paper.confidence * 100).toFixed(2)}%
-              </div>
-            </div>
           </div>
         </div>
       ))}

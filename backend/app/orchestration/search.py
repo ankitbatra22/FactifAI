@@ -28,11 +28,12 @@ class SearchOrchestrator:
 
         # 2. Run academic search and web search in parallel
         async def academic_search():
-            results = []
-            for term in processed.processed_result.academic_terms:
-                papers = await self.search_pipeline.search(term)
-                results.extend(papers)
-            return results
+            # results = []
+            # for term in processed.processed_result.academic_terms:
+            #     papers = await self.search_pipeline.search(term)
+            #     results.extend(papers)
+            papers = await self.search_pipeline.search(processed.processed_result.academic_term)
+            return papers
 
         async def web_search_and_summarize() -> ResearchSummary:
             web_results: List[GoogleSearchResult] = await self.google_search.search(query=query)
@@ -52,7 +53,7 @@ class SearchOrchestrator:
         papers = [
             ResearchPaper(
                 title=paper['title'],
-                summary=paper['content'][:300],  # Preview
+                summary=f"{paper['content'][:500]}...",  # Preview
                 url=paper['url'],
                 confidence=paper['score']
             )

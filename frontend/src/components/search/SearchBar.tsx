@@ -1,35 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { searchPapers } from '@/lib/api';
-import type { SearchResponse } from '@/types/search';
+import { useRouter } from 'next/navigation';
 
-interface SearchBarProps {
-  onSearchStart: () => void;
-  onSearchComplete: (results: SearchResponse) => void;
-  initialQuery?: string;
-}
-
-export function SearchBar({ 
-  onSearchStart, 
-  onSearchComplete,
-  initialQuery = ''
-}: SearchBarProps) {
-  const [query, setQuery] = useState(initialQuery);
+export function SearchBar() {
+  const [query, setQuery] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
-
-    onSearchStart();
-    try {
-      const results = await searchPapers(query);
-      onSearchComplete(results);
-    } catch (error) {
-      console.error('Search failed:', error);
-      // TODO: Add error handling
-    }
+    
+    router.push(`/results?q=${encodeURIComponent(query.trim())}`);
   };
 
   return (
@@ -53,13 +35,6 @@ export function SearchBar({
             <span className="text-sm font-medium">Search</span>
             <kbd className="px-2 py-1 text-xs bg-gray-800 rounded-md border border-gray-700">⏎</kbd>
           </div>
-          <div className="h-4 w-px bg-gray-700" />
-          <button
-            type="submit"
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-          >
-            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
-          </button>
         </div>
       </form>
     </div>

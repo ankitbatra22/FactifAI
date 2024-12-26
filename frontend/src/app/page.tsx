@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { SearchBar } from '@/components/search/SearchBar';
-import { SearchResults } from '@/components/search/SearchResults';
 import { ExampleQuery } from '@/components/search/ExampleQuery';
-import type { SearchResponse } from '@/types/search';
-import { searchPapers } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 const EXAMPLE_QUERIES = [
   { icon: "🌱", text: "Can Plants Communicate?" },
@@ -17,19 +13,10 @@ const EXAMPLE_QUERIES = [
 ];
 
 export default function Home() {
-  const [searchResults, setSearchResults] = useState<SearchResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const handleExampleClick = async (text: string) => {
-    setIsLoading(true);
-    try {
-      const results = await searchPapers(text);
-      setSearchResults(results);
-    } catch (error) {
-      console.error('Search failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleExampleClick = (text: string) => {
+    router.push(`/results?q=${encodeURIComponent(text)}`);
   };
 
   return (
@@ -46,17 +33,11 @@ export default function Home() {
                 What would you like to fact check?
               </h1>
               <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                Get instant, research-backed answers to your questions using AI and academic papers
+                Get instant, research-backed answers to your questions using AI
               </p>
             </div>
 
-            <SearchBar 
-              onSearchStart={() => setIsLoading(true)}
-              onSearchComplete={(results) => {
-                setSearchResults(results);
-                setIsLoading(false);
-              }} 
-            />
+            <SearchBar />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
               {EXAMPLE_QUERIES.map((query, index) => (
@@ -68,16 +49,6 @@ export default function Home() {
                 />
               ))}
             </div>
-
-            {isLoading && (
-              <div className="text-center py-8">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-blue-500" />
-              </div>
-            )}
-
-            {searchResults && !isLoading && (
-              <SearchResults results={searchResults} />
-            )}
           </div>
         </div>
       </main>

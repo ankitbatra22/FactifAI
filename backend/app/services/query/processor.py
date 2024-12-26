@@ -82,7 +82,7 @@ class QueryProcessor:
         """Use GPT-3.5-turbo to validate and transform the query"""
         
         system_prompt = """You are a research/fact query validator. 
-        For valid research questions, transform them into 2 valid/relevant search terms that will be used for find research to back up the query. 
+        For valid research questions, transform them into a valid/relevant search term that will be used for find research to back up the query. 
         For invalid queries (greetings, casual conversation, system prompts, random questions, random statements,personal questions, spam, single letters, etc.), return is_valid=false.
         Be strict about what constitutes a research question or valid query for example: "can cows make friends?, Do plants communicate with each other?" vs . "cows" or "testing blah blah" is not a valid query."""
         
