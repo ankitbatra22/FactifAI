@@ -21,9 +21,10 @@ class SearchOrchestrator:
         processed = await self.query_processor.process_query(query)
         
         if not processed.processed_result.is_valid:
-            raise HTTPException(
-                status_code=400,
-                detail="Please provide a valid research question"
+            return SearchResponse(
+                is_valid=False,
+                papers=[],
+                web_summary=None,
             )
 
         # 2. Run academic search and web search in parallel
@@ -61,6 +62,7 @@ class SearchOrchestrator:
         ]
 
         return SearchResponse(
+            is_valid=True,
             papers=papers,
             web_summary=web_summary
         )

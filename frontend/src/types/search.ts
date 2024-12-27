@@ -15,6 +15,7 @@ export interface WebSummary {
 }
 
 export interface SearchResponse {
+  is_valid: boolean;
   papers: ResearchPaper[];
   web_summary: WebSummary;
 }

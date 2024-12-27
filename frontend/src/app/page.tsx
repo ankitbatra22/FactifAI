@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { SearchBar } from '@/components/search/SearchBar';
 import { ExampleQuery } from '@/components/search/ExampleQuery';
@@ -14,10 +15,17 @@ const EXAMPLE_QUERIES = [
 
 export default function Home() {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleExampleClick = (text: string) => {
     router.push(`/results?q=${encodeURIComponent(text)}`);
   };
+
+  if (!mounted) return null;
 
   return (
     <div className="min-h-screen bg-[#0D1117] text-white flex flex-col">

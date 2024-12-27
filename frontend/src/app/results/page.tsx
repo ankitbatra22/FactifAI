@@ -7,7 +7,6 @@ import { SearchLoading } from '../../components/search/SearchLoading';
 import { searchPapers } from '@/lib/api';
 import type { SearchResponse } from '@/types/search';
 
-// Cache key prefix
 const CACHE_KEY_PREFIX = 'search_results_';
 
 export default function ResultsPage() {
@@ -28,31 +27,31 @@ export default function ResultsPage() {
     const fetchResults = async () => {
       if (!query) return;
 
-      // Create a cache key based on the query
       const cacheKey = CACHE_KEY_PREFIX + query;
-      
-      // Try to get cached results first
-      const cachedResults = localStorage.getItem(cacheKey);
-      if (cachedResults) {
-        setResults(JSON.parse(cachedResults));
-        setIsLoading(false);
-        return;
-      }
       
       try {
         setIsLoading(true);
         const data = await searchPapers(query);
+        
+        // Check if query was invalid according to the LLM validator
+        if (!data.is_valid) {
+          setError('Please enter a valid query. For example: "Can Cows Make Friends?"');
+          setResults(null);
+          return;
+        }
+
         setResults(data);
-        // Cache the results
+        setError(null);
         localStorage.setItem(cacheKey, JSON.stringify(data));
       } catch (err) {
-        setError('Failed to fetch results');
+        setError('An error occurred while searching. Please try again.');
+        setResults(null);
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (mounted) { // Only fetch after component is mounted
+    if (mounted) {
       fetchResults();
     }
   }, [query, mounted]);
@@ -87,7 +86,21 @@ export default function ResultsPage() {
         {isLoading ? (
           <SearchLoading />
         ) : error ? (
-          <div className="text-center text-red-400">{error}</div>
+          <div className="text-center">
+            <p className="text-red-400">{error}</p>
+            <button
+              onClick={() => router.push('/')}
+              className="mt-4 px-4 py-2 text-sm font-medium text-gray-300 
+                       bg-[#2A2A2A] rounded-lg hover:bg-[#333333] 
+                       transition-colors flex items-center gap-2 mx-auto"
+            >
+              <span>Try Another Search</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </div>
         ) : results ? (
           <div className="space-y-12">
             {/* Query and Try Another Button */}
