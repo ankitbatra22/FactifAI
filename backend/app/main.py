@@ -17,7 +17,7 @@ async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded) ->
     return JSONResponse(
         status_code=429,
         content={
-            "detail": "Currently free users are limited to 8 queries per hour. Premium version coming soon!"
+            "detail": "Currently free users are limited to 10 queries per hour. Premium version coming soon!"
         }
     )
 
@@ -33,12 +33,16 @@ app.add_middleware(
 
 search_orchestrator = SearchOrchestrator()
 
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Querie API"}
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
 
 @app.post("/search", response_model=SearchResponse)
-@limiter.limit("8/hour")  # Allow 10 requests per hour per IP
+@limiter.limit("10/hour")  # Allow 10 requests per hour per IP
 async def search_papers(request: Request, query: SearchQuery):
     """
     Search endpoint that combines academic papers and web results
