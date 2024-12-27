@@ -3,6 +3,7 @@ fastapi
 uvicorn[standard]
 python-multipart
 pydantic-settings
+slowapi
 
 # Database
 sqlalchemy

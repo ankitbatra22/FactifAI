@@ -33,9 +33,8 @@ export default function ResultsPage() {
         setIsLoading(true);
         const data = await searchPapers(query);
         
-        // Check if query was invalid according to the LLM validator
         if (!data.is_valid) {
-          setError('Please enter a valid query. For example: "Can Cows Make Friends?"');
+          setError('Please enter a valid research question. For example: "Can Cows Make Friends?"');
           setResults(null);
           return;
         }
@@ -43,8 +42,13 @@ export default function ResultsPage() {
         setResults(data);
         setError(null);
         localStorage.setItem(cacheKey, JSON.stringify(data));
-      } catch (err) {
-        setError('An error occurred while searching. Please try again.');
+      } catch (err: any) {
+        console.error('Search error:', err);
+        if (err.status === 429) {
+          setError(err.message);
+        } else {
+          setError('An error occurred while searching. Please try again.');
+        }
         setResults(null);
       } finally {
         setIsLoading(false);
@@ -86,8 +90,10 @@ export default function ResultsPage() {
         {isLoading ? (
           <SearchLoading />
         ) : error ? (
-          <div className="text-center">
-            <p className="text-red-400">{error}</p>
+          <div className="text-center space-y-6">
+            <p className="text-lg text-gray-200 bg-red-500/10 border border-red-500/20 rounded-lg px-6 py-4">
+              {error}
+            </p>
             <button
               onClick={() => router.push('/')}
               className="mt-4 px-4 py-2 text-sm font-medium text-gray-300 
@@ -103,10 +109,10 @@ export default function ResultsPage() {
           </div>
         ) : results ? (
           <div className="space-y-12">
-            {/* Query and Try Another Button */}
-            <div className="flex justify-between items-center">
-              <div className="space-y-2">
-                <h1 className="text-2xl font-medium text-white/90">
+            {/* Updated header section */}
+            <div className="flex items-start justify-between border-b border-gray-800 pb-6">
+              <div className="space-y-1">
+                <h1 className="text-3xl font-medium text-white/90">
                   {query}
                 </h1>
                 <p className="text-sm text-gray-400">
@@ -115,24 +121,14 @@ export default function ResultsPage() {
               </div>
               <button
                 onClick={() => router.push('/')}
-                className="px-4 py-2 text-sm font-medium text-gray-300 
-                           bg-[#2A2A2A] rounded-lg
-                           hover:bg-[#333333] transition-colors
-                           flex items-center gap-2"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium 
+                         text-gray-300 bg-[#2A2A2A] rounded-lg hover:bg-[#333333] 
+                         transition-colors flex-shrink-0"
               >
-                <span>Try Another Search</span>
-                <svg 
-                  className="w-4 h-4" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
-                  />
+                <span>New Search</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
             </div>
