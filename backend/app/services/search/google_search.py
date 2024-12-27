@@ -53,10 +53,10 @@ class GoogleSearchService:
         'board', 'topic', 'message', 'chat', 'conversation', 'talk',
         
         # Social/Q&A
-        'reddit', 'quora', 'answers', 'ask', 'stackexchange',
+        'reddit', 'quora', 'answers', 'ask', 'stackexchange', 'wikipedia', 'wiki', 
         
         # User-generated content
-        'blog', 'post', 'question', 'responses', 'replies'
+        'blog', 'post', 'question', 'responses', 'replies', 'talk',
     ]
     
     def __init__(self, 
