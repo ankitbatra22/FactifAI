@@ -9,7 +9,7 @@ from app.orchestration.search import SearchOrchestrator
 from app.config import settings
 
 limiter = Limiter(key_func=get_remote_address)
-app = FastAPI(title="Querie")
+app = FastAPI(title="FactifAI")
 
 # Custom rate limit handler
 @app.exception_handler(RateLimitExceeded)
@@ -35,7 +35,7 @@ search_orchestrator = SearchOrchestrator()
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Querie API"}
+    return {"message": "Welcome to the FactifAI API"}
 
 @app.get("/health")
 async def health_check():

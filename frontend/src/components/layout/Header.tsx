@@ -11,7 +11,7 @@ export function Header() {
                      text-transparent bg-clip-text 
                      hover:opacity-90 transition-opacity"
         >
-          Querie
+          Factif AI
         </Link>
       </div>
     </header>
