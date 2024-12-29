@@ -36,12 +36,12 @@ class LLMService:
             Focus on verifiable facts from reputable sources.
             """},
             {"role": "user", "content": f"""
-            Research Question: {query}
+            Research Query: {query}
             
-            Available Sources:
+            Available Sources/Results:
             {context}
             
-            Generate a research summary with key findings and their sources.
+            Generate a solid researchsummary on the provided question with key findings and their sources.
             """}
         ]
         

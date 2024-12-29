@@ -21,7 +21,7 @@ class BasicQueryValidator:
     
     # Length constraints
     MIN_LENGTH = 3
-    MAX_LENGTH = 500
+    MAX_LENGTH = 400
     
     def check_basic_rules(self, query: str) -> bool:
         """Quick validation of obvious issues"""
