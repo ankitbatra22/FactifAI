@@ -9,7 +9,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Factif AI - Research-Backed Answers',
+  title: 'FactifAI - Research-Backed Answers',
   description: 'Get research-backed answers to your questions instantly',
 };
 

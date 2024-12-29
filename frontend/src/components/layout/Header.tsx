@@ -11,7 +11,7 @@ export function Header() {
                      text-transparent bg-clip-text 
                      hover:opacity-90 transition-opacity"
         >
-          Factif AI
+          FactifAI
         </Link>
       </div>
     </header>
