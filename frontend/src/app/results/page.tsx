@@ -1,28 +1,38 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Header } from '@/components/layout/Header';
 import { SearchLoading } from '../../components/search/SearchLoading';
 import { searchPapers } from '@/lib/api';
 import type { SearchResponse } from '@/types/search';
 
+export const dynamic = 'force-dynamic';
 const CACHE_KEY_PREFIX = 'search_results_';
 
-export default function ResultsPage() {
+// Create a wrapped component that uses useSearchParams
+function ResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q');
   const [results, setResults] = useState<SearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // Add mounted state to prevent hydration mismatch
-  const [mounted, setMounted] = useState(false);
 
+  // Remove mounted state and use useEffect for localStorage operations directly
   useEffect(() => {
-    setMounted(true);
+    const clearOldCache = () => {
+      const keys = Object.keys(localStorage);
+      const searchKeys = keys.filter(key => key.startsWith(CACHE_KEY_PREFIX));
+      
+      if (searchKeys.length > 10) {
+        searchKeys
+          .slice(0, searchKeys.length - 10)
+          .forEach(key => localStorage.removeItem(key));
+      }
+    };
+
+    clearOldCache();
   }, []);
 
   useEffect(() => {
@@ -31,6 +41,20 @@ export default function ResultsPage() {
 
       const cacheKey = CACHE_KEY_PREFIX + query;
       
+      // Check cache first
+      try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+          const parsedData = JSON.parse(cached) as SearchResponse;
+          setResults(parsedData);
+          setIsLoading(false);
+          return;
+        }
+      } catch (err) {
+        console.error('Error reading from cache:', err);
+      }
+
+      // If no cache, fetch from API
       try {
         setIsLoading(true);
         const data = await searchPapers(query);
@@ -43,6 +67,7 @@ export default function ResultsPage() {
 
         setResults(data);
         setError(null);
+        // Store in cache
         localStorage.setItem(cacheKey, JSON.stringify(data));
       } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
         console.error('Search error:', err);
@@ -57,37 +82,14 @@ export default function ResultsPage() {
       }
     };
 
-    if (mounted) {
-      fetchResults();
-    }
-  }, [query, mounted]);
+    fetchResults();
+  }, [query]);
 
-  useEffect(() => {
-    if (!mounted) return; // Skip cache cleanup until mounted
-
-    const clearOldCache = () => {
-      const keys = Object.keys(localStorage);
-      const searchKeys = keys.filter(key => key.startsWith(CACHE_KEY_PREFIX));
-      
-      // Keep only the last 10 searches
-      if (searchKeys.length > 10) {
-        searchKeys
-          .slice(0, searchKeys.length - 10)
-          .forEach(key => localStorage.removeItem(key));
-      }
-    };
-
-    clearOldCache();
-  }, [mounted]);
-
-  // Don't render anything until after hydration
-  if (!mounted) return null;
   if (!query) return null;
 
   return (
     <div className="min-h-screen bg-[#0D1117] text-white">
       <Header />
-      
       <main className="container mx-auto px-4 py-16 max-w-4xl">
         {isLoading ? (
           <SearchLoading />
@@ -213,5 +215,14 @@ export default function ResultsPage() {
         ) : null}
       </main>
     </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={<SearchLoading />}>
+      <ResultsContent />
+    </Suspense>
   );
 }
