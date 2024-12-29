@@ -37,7 +37,9 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",  # Local development
         "https://querie.ai",      # Production domain
-        # Add any other domains (staging, etc.)
+        "https://factifai.vercel.app",
+        "https://factifai-git-main-ankitbatra22s-projects.vercel.app",
+        "https://factifai-drrpii6t2-ankitbatra22s-projects.vercel.app"
     ]
 
     class Config:
