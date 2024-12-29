@@ -7,6 +7,11 @@ import { SearchLoading } from '../../components/search/SearchLoading';
 import { searchPapers } from '@/lib/api';
 import type { SearchResponse } from '@/types/search';
 
+interface ApiError {
+  status?: number;
+  message: string;
+}
+
 const CACHE_KEY_PREFIX = 'search_results_';
 
 export default function ResultsPage() {
@@ -42,10 +47,11 @@ export default function ResultsPage() {
         setResults(data);
         setError(null);
         localStorage.setItem(cacheKey, JSON.stringify(data));
-      } catch (err: any) {
+      } catch (err) {
         console.error('Search error:', err);
-        if (err.status === 429) {
-          setError(err.message);
+        // Handle the structured 429 error we created in api.ts
+        if (err && typeof err === 'object' && 'status' in err) {
+          setError((err as ApiError).message);
         } else {
           setError('An error occurred while searching. Please try again.');
         }
