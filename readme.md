@@ -22,11 +22,11 @@ Key findings are always from trusted sources to truly be able to back up your re
 ### Core Services
 
 #### 1. Search Orchestrator
-The `SearchOrchestrator` coordinates the entire search and response generation process:
-- Manages query processing and validation (catches invalid queries like "hi")
-- Coordinates parallel searches across different sources
-- Aggregates and ranks results
-- Handles response generation
+The `SearchOrchestrator` coordinates the entire search by calling the other services.
+- Manages query processing and validation (catches invalid queries like "hi") (LLM Service)
+- Ingests papers from sources like Arxiv, PubMed, etc. based on query (Ingestion Service/Pipeline) 
+- Aggregates and ranks results (Embedding Service)
+- Handles response generation (LLM Service)
 
 #### 2. LLM Service
 Manages interactions with OpenAI's GPT-4:
@@ -77,8 +77,8 @@ Main search endpoint that accepts research queries.
 ```json
 {
   "papers": [...],
-  "web_summary": {
-    "summary": "...",
+  "summary": {
+    "snippet": "...",
     "findings": [...]
   },
   "is_valid": true
