@@ -75,7 +75,7 @@ class SearchPipeline:
         source_name: str, 
         connector: BaseSourceConnector, 
         query: str,
-        max_results: int = 30  # Default to 100 results per source
+        max_results: int = 50  # Default to 100 results per source
     ) -> List[Dict]:
         """
         Fetch up to max_results from a single source
@@ -95,7 +95,7 @@ class SearchPipeline:
         tasks = []
         for source_name, connector in self.sources.items():
             # Adjust max_results based on source
-            max_results = 100
+            max_results = 50
             task = self._fetch_from_source(
                 source_name=source_name, 
                 connector=connector, 

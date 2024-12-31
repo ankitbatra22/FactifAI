@@ -1,6 +1,8 @@
 # FactifAI - AI-Powered Research Assistant
 
-FactifAI is an intelligent research assistant that combines embedding search academic papers and a web result summary to provide comprehensive, research-backed answers to your questions. It uses advanced language models and semantic search powered by RAG (Retrieval-Augmented Generation) to deliver relevant, academically-grounded responses.
+FactifAI is an intelligent research assistant that combines embedding search academic papers and a web result summary to provide comprehensive, research-backed answers to your questions. It uses advanced language models and semantic search powered by RAG (Retrieval-Augmented Generation) to deliver relevant, academically-grounded responses. 
+
+Key findings are always from trusted sources to truly be able to back up your research query 🚀
 
 ## Tech Stack
 
