@@ -1,6 +1,6 @@
 # FactifAI - AI-Powered Research Assistant
 
-FactifAI is an intelligent research assistant that combines academic papers and web results to provide comprehensive, research-backed answers to your questions. It uses advanced language models and semantic search powered by RAG (Retrieval-Augmented Generation) to deliver relevant, academically-grounded responses.
+FactifAI is an intelligent research assistant that combines embedding search academic papers and a web result summary to provide comprehensive, research-backed answers to your questions. It uses advanced language models and semantic search powered by RAG (Retrieval-Augmented Generation) to deliver relevant, academically-grounded responses.
 
 ## Tech Stack
 
@@ -21,7 +21,7 @@ FactifAI is an intelligent research assistant that combines academic papers and 
 
 #### 1. Search Orchestrator
 The `SearchOrchestrator` coordinates the entire search and response generation process:
-- Manages query processing and validation
+- Manages query processing and validation (catches invalid queries like "hi")
 - Coordinates parallel searches across different sources
 - Aggregates and ranks results
 - Handles response generation
@@ -40,12 +40,8 @@ Powered by Pinecone and SPECTER:
 - Similar paper recommendations
 - Research clustering
 
-#### 4. Web Search Service
-Custom Google Search integration:
-- Filtered web results
-- Source validation
-- Content extraction
-- Citation tracking
+### 4. Ingestion Pipeline
+Runs runtime ingestion of academic papers from sources like Arxiv, PubMed, Crossref, and OpenAlex. (see: `app/services/ingestion/sources` for all API's being accessed) which are then used to generate embeddings and store in Pinecone to be used for semantic search/similarity search with query. 
 
 ### Key Features
 
