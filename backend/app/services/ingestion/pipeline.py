@@ -22,7 +22,7 @@ from app.services.ingestion.sources.open_alex import OpenAlexConnector
 class SearchPipeline:
     sources = {
         'arxiv': ArxivConnector(),          # ~100 results
-        'pubmed': PubMedConnector(),        # ~100 results
+        #'pubmed': PubMedConnector(),        # ~100 results
         'crossref': CrossrefConnector(),    # ~100 results
         'open_alex': OpenAlexConnector(),  # ~100 results
         
@@ -75,7 +75,7 @@ class SearchPipeline:
         source_name: str, 
         connector: BaseSourceConnector, 
         query: str,
-        max_results: int = 50  # Default to 100 results per source
+        max_results: int = 30  # Default to 100 results per source
     ) -> List[Dict]:
         """
         Fetch up to max_results from a single source

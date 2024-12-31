@@ -69,6 +69,8 @@ fsspec==2024.10.0
     # via
     #   huggingface-hub
     #   torch
+google-search-results==2.4.2
+    # via -r requirements/requirements.in
 h11==0.14.0
     # via
     #   httpcore
@@ -212,6 +214,7 @@ requests==2.32.3
     # via
     #   arxiv
     #   easy-entrez
+    #   google-search-results
     #   huggingface-hub
     #   transformers
 safetensors==0.4.5

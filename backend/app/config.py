@@ -34,6 +34,10 @@ class Settings(BaseSettings):
     OPEN_ALEX_RATE_LIMIT: int = 10
     OPEN_ALEX_EMAIL: str = "your-email@example.com"
 
+    # SerpAPI Settings
+    USE_SERP: bool = Field(default=False)
+    SERP_API_KEY: str
+
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",  # Local development
         "https://querie.ai",      # Production domain

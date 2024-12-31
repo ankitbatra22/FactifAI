@@ -2,18 +2,22 @@ from fastapi import HTTPException
 from app.services.query.processor import QueryProcessor
 from app.services.ingestion.pipeline import SearchPipeline
 from app.services.search.google_search import GoogleSearchService, GoogleSearchResult
+from app.services.search.serp_search import SerpSearchService, SerpSearchResponse
 from app.services.llm.llm_service import LLMService
 from app.schemas.search import SearchResponse, ResearchPaper
 from app.schemas.research_summary import ResearchSummary
+from app.config import settings
 import asyncio
-from typing import List
+from typing import List, Union
 
 
 class SearchOrchestrator:
     def __init__(self):
         self.query_processor = QueryProcessor()
         self.search_pipeline = SearchPipeline()
-        self.google_search = GoogleSearchService()
+        self.search_service = (
+            SerpSearchService() if settings.USE_SERP else GoogleSearchService()
+        )
         self.llm_service = LLMService()
 
     async def search(self, query: str) -> SearchResponse:
@@ -37,7 +41,7 @@ class SearchOrchestrator:
             return papers
 
         async def web_search_and_summarize() -> ResearchSummary:
-            web_results: List[GoogleSearchResult] = await self.google_search.search(query=query)
+            web_results: List[Union[GoogleSearchResult, SerpSearchResponse]] = await self.search_service.search(query=query)
             summary: ResearchSummary = await self.llm_service.generate_summary(
                 query=query,
                 search_results=web_results

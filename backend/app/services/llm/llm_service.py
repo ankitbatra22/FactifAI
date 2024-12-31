@@ -33,7 +33,7 @@ class LLMService:
             1. Summarizes the key findings
             2. Lists specific claims with their sources
             
-            Focus on verifiable facts from reputable sources.
+            Focus on verifiable facts from reputable sources. Don't include the AI overview in the summary.
             """},
             {"role": "user", "content": f"""
             Research Query: {query}
@@ -41,7 +41,7 @@ class LLMService:
             Available Sources/Results:
             {context}
             
-            Generate a solid researchsummary on the provided question with key findings and their sources.
+            Generate a solid research summary on the provided question with key findings and their sources.
             """}
         ]
         
