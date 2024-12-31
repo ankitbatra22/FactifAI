@@ -18,72 +18,65 @@ function ResultsContent() {
   const [results, setResults] = useState<SearchResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Remove mounted state and use useEffect for localStorage operations directly
+  // Handle initial load separately
   useEffect(() => {
-    const clearOldCache = () => {
-      const keys = Object.keys(localStorage);
-      const searchKeys = keys.filter(key => key.startsWith(CACHE_KEY_PREFIX));
-      
-      if (searchKeys.length > 10) {
-        searchKeys
-          .slice(0, searchKeys.length - 10)
-          .forEach(key => localStorage.removeItem(key));
+    if (!query) return;
+
+    const cacheKey = CACHE_KEY_PREFIX + query;
+    const cached = localStorage.getItem(cacheKey);
+    
+    if (cached) {
+      try {
+        const parsedData = JSON.parse(cached) as SearchResponse;
+        setResults(parsedData);
+        setIsLoading(false);
+      } catch {
+        localStorage.removeItem(cacheKey);
       }
-    };
+    }
+    
+    setIsInitialLoad(false);
+  }, [query]);
 
-    clearOldCache();
-  }, []);
-
+  // Handle subsequent data fetching
   useEffect(() => {
-    const fetchResults = async () => {
-      if (!query) return;
+    if (!query || isInitialLoad) return;
 
+    const fetchResults = async () => {
       const cacheKey = CACHE_KEY_PREFIX + query;
       
-      // Check cache first
-      try {
-        const cached = localStorage.getItem(cacheKey);
-        if (cached) {
-          const parsedData = JSON.parse(cached) as SearchResponse;
-          setResults(parsedData);
-          setIsLoading(false);
-          return;
-        }
-      } catch (err) {
-        console.error('Error reading from cache:', err);
-      }
-
-      // If no cache, fetch from API
-      try {
+      if (!results) {
         setIsLoading(true);
-        const data = await searchPapers(query);
-        
-        if (!data.is_valid) {
-          setError('Please enter a valid research question. For example: "Can Cows Make Friends?"');
+        try {
+          const data = await searchPapers(query);
+          
+          if (!data.is_valid) {
+            setError('Please enter a valid research question. For example: "Can Cows Make Friends?"');
+            setResults(null);
+          } else {
+            setResults(data);
+            setError(null);
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+          }
+        } catch (error: unknown) {
+          console.error('Search error:', error);
+          if (typeof error === 'object' && error !== null && 'status' in error && error.status === 429) {
+            // @ts-expect-error Custom error type from API
+            setError(error.message);
+          } else {
+            setError('An error occurred while searching. Please try again.');
+          }
           setResults(null);
-          return;
+        } finally {
+          setIsLoading(false);
         }
-
-        setResults(data);
-        setError(null);
-        // Store in cache
-        localStorage.setItem(cacheKey, JSON.stringify(data));
-      } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-        console.error('Search error:', err);
-        if (err.status === 429) {
-          setError(err.message);
-        } else {
-          setError('An error occurred while searching. Please try again.');
-        }
-        setResults(null);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     fetchResults();
-  }, [query]);
+  }, [query, isInitialLoad, results]);
 
   if (!query) return null;
 
