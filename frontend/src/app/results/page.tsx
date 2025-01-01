@@ -83,7 +83,7 @@ function ResultsContent() {
   return (
     <div className="min-h-screen bg-[#0D1117] text-white">
       <Header />
-      <main className="container mx-auto px-4 py-16 max-w-4xl">
+      <main className="container mx-auto px-4 pt-32 pb-16 max-w-4xl">
         {isLoading ? (
           <SearchLoading />
         ) : error ? (

@@ -7,7 +7,7 @@ export function Header() {
 
   return (
     <>
-      <header className="absolute top-0 left-0 w-full p-6 z-40">
+      <header className="absolute top-0 left-0 w-full p-6 pb-16 z-40">
         <div className="container mx-auto flex justify-between items-center">
           <Link 
             href="/" 

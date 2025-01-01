@@ -26,7 +26,7 @@ export default function Home() {
       <main className="flex-1 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-violet-500/5" />
         
-        <div className="container mx-auto px-4 py-16 max-w-3xl relative">
+        <div className="container mx-auto px-4 pt-32 pb-16 max-w-3xl relative">
           <div className="space-y-8 text-center">
             <div className="space-y-4">
               <h1 className="text-5xl font-bold font-plus-jakarta bg-gradient-to-r from-blue-400 to-violet-400 text-transparent bg-clip-text">
