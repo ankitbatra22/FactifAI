@@ -45,12 +45,10 @@ Powered by Pinecone and SPECTER:
 ### 4. Ingestion Pipeline
 Runs runtime ingestion of academic papers from sources like Arxiv, PubMed, Crossref, and OpenAlex. (see: `app/services/ingestion/sources` for all API's being accessed) which are then used to generate embeddings and store in Pinecone to be used for semantic search/similarity search with query. 
 
-### Key Features
-
-- **Rate Limiting**: 10 requests per hour per IP (currently free user)
-- **CORS Support**: Configurable origins
-- **Async Processing**: Parallel search execution for performance 
-- **Error Handling**: Graceful degradation
+### Additional Features
+- **Caching**: Recent search storage
+- **Robustness**: Query validation error handling, graceful degradation, performance monitoring, health checks
+- **Security**: Rate limiting, CORS support
 
 ## Frontend Features
 
