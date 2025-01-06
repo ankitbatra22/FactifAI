@@ -22,7 +22,7 @@ from app.services.ingestion.sources.open_alex import OpenAlexConnector
 class SearchPipeline:
     sources = {
         'arxiv': ArxivConnector(),          # ~100 results
-        #'pubmed': PubMedConnector(),        # ~100 results
+        #'pubmed': PubMedConnector(),        # ~100 results  # temporarily disabled
         'crossref': CrossrefConnector(),    # ~100 results
         'open_alex': OpenAlexConnector(),  # ~100 results
         
