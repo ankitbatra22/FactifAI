@@ -9,7 +9,7 @@ interface FindingProps {
   source_date?: string;
 }
 
-export function FindingCard({ title, text, source_url, domain, source_name, source_date }: FindingProps) {
+export function FindingCard({ title, text, source_url, source_name, source_date }: FindingProps) {
   return (
     <div className="bg-gray-800/50 rounded-lg p-4 hover:bg-gray-800/70 transition-colors">
       <div className="flex flex-col gap-3">
