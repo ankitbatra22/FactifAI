@@ -1,6 +1,5 @@
 import React from 'react';
 import { ResearchPaper } from '@/types/search';
-import { IconExternalLink } from '@tabler/icons-react';
 
 interface PaperCardProps {
   paper: ResearchPaper;

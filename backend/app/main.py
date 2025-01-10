@@ -17,7 +17,7 @@ async def custom_rate_limit_handler(request: Request, exc: RateLimitExceeded) ->
     return JSONResponse(
         status_code=429,
         content={
-            "detail": "Currently free users are limited to 10 queries per hour. Premium version coming soon!"
+            "detail": "Currently free users are limited to 5 queries per hour. Premium version coming soon!"
         }
     )
 
@@ -42,7 +42,7 @@ async def health_check():
     return {"status": "healthy"}
 
 @app.post("/search", response_model=SearchResponse)
-@limiter.limit("20/hour")  # Allow 10 requests per hour per IP
+@limiter.limit("5/hour")  # Allow 5 requests per hour per IP
 async def search_papers(request: Request, query: SearchQuery):
     """
     Search endpoint that combines academic papers and web results

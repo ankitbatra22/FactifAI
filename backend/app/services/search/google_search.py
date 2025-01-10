@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 import asyncio
 import logging
 import json
-import os
+from app.services.search.constants import EXCLUDED_DOMAINS, EXCLUDED_URL_PATTERNS
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -28,16 +28,6 @@ class GoogleSearchService:
     
     BASE_URL = "https://www.google.com/search"
     
-    # Bad domains to exclude
-    EXCLUDED_DOMAINS = {
-        'reddit.com', 'quora.com', 'pinterest.com', 
-        'facebook.com', 'twitter.com', 'instagram.com',
-        'tiktok.com', 'youtube.com', 'medium.com', 'linkedin.com',
-        'towardsdatascience.com', 'wikihow.com', 'wikipedia.org',
-        'yahoo.answers.com', 'answers.com', 'answers.yahoo.com',
-        'buzzfeed.com', 'boredpanda.com', 'huffpost.com'
-    }
-    
     # Rotating set of common user agents
     USER_AGENTS = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -52,19 +42,6 @@ class GoogleSearchService:
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.2420.81",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    ]
-    
-    # Add this near the top with other class variables
-    EXCLUDED_URL_PATTERNS = [
-        # Discussion/Forum indicators
-        'forum', 'thread', 'discussion', 'community', 'comments',
-        'board', 'topic', 'message', 'chat', 'conversation', 'talk',
-        
-        # Social/Q&A
-        'reddit', 'quora', 'answers', 'ask', 'stackexchange', 'wikipedia', 'wiki', 
-        
-        # User-generated content
-        'blog', 'post', 'question', 'responses', 'replies', 'talk',
     ]
     
     def __init__(self, 
@@ -106,12 +83,12 @@ class GoogleSearchService:
         """Check if the source URL is valid (not in excluded list and no bad patterns)"""
         # Extract domain and check against excluded list
         domain = self.extract_domain(url)
-        if domain in self.EXCLUDED_DOMAINS:
+        if domain in EXCLUDED_DOMAINS:
             return False
             
         # Check entire URL (including path) for excluded patterns
         url_lower = url.lower()
-        if any(pattern in url_lower for pattern in self.EXCLUDED_URL_PATTERNS):
+        if any(pattern in url_lower for pattern in EXCLUDED_URL_PATTERNS):
             logger.debug(f"Excluding URL due to pattern match: {url}")
             return False
             

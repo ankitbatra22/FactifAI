@@ -30,14 +30,14 @@ The `SearchOrchestrator` coordinates the entire search by calling the other serv
 
 #### 2. LLM Service
 Manages interactions with OpenAI's GPT-4:
-- Query enhancement and reformulation
-- Research summary generation
+- Query enhancement and reformulation (E.g Turns "Can Cows Make Friends?" into "Bovine social behavior")
+- Research summary generation (Uses papers and web results to generate a summary)
 - Key findings extraction
 - Response synthesis
 
 #### 3. Vector Search Service
 Powered by Pinecone and SPECTER:
-- Semantic paper search
+- Semantic paper search 
 - Embedding generation
 - Similar paper recommendations
 - Research clustering
