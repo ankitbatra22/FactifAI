@@ -23,13 +23,13 @@ class ArxivConnector(BaseSourceConnector):
             
             search = arxiv.Search(
                 query=query,
-                max_results=min(max_results, 30),
+                max_results=min(max_results, 12),
                 sort_by=arxiv.SortCriterion.Relevance,
                 sort_order=arxiv.SortOrder.Descending
             )
             
             try:
-                async with asyncio.timeout(4):
+                async with asyncio.timeout(3):
                     papers = list(search.results())
                     print(f"ArxivConnector: Got {len(papers)} results")
                     
