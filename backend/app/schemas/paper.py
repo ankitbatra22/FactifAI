@@ -13,6 +13,8 @@ class PaperMetadata(BaseModel):
     citations: Optional[int] = None
     categories: List[str] = []
     abstract: Optional[str] = None
+    doi: Optional[str] = None
+    type: Optional[str] = None
 
 class Paper(BaseModel):
     """

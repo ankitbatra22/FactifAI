@@ -28,45 +28,35 @@ class ArxivConnector(BaseSourceConnector):
                 sort_order=arxiv.SortOrder.Descending
             )
             
-            results = []
             try:
-                async with asyncio.timeout(4):  # 4 second timeout
-                    papers = list(search.results())  # This is the actual API call
+                async with asyncio.timeout(4):
+                    papers = list(search.results())
                     print(f"ArxivConnector: Got {len(papers)} results")
-
-                    for paper in papers:
-                        try:
-                            if len(results) >= max_results:
-                                print(f"ArxivConnector: Reached max results limit of {max_results}")
-                                break
-                            
-                            paper_model = Paper(
-                                title=paper.title,
-                                url=paper.entry_id,
-                                metadata=PaperMetadata(
-                                    authors=[author.name for author in paper.authors],
-                                    year=paper.published.year,
-                                    published_date=paper.published,
-                                    abstract=paper.summary,
-                                    categories=paper.categories
-                                )
-                            )
-                            
-                            results.append(paper_model)
-                            
-                        except Exception as e:
-                            print(f"ArxivConnector: Error processing individual paper: {str(e)}")
-                            continue
                     
-                    print(f"ArxivConnector: Successfully processed {len(results)}/{len(papers)} papers")
+                    results = [
+                        Paper(
+                            title=paper.title,
+                            url=paper.entry_id,
+                            metadata=PaperMetadata(
+                                authors=[author.name for author in paper.authors],
+                                year=paper.published.year,
+                                published_date=paper.published,
+                                abstract=paper.summary,
+                                categories=paper.categories
+                            )
+                        )
+                        for paper in papers[:max_results]
+                    ]
+                    
+                    print(f"ArxivConnector: Successfully processed {len(results)} papers")
                     return results
                 
             except asyncio.TimeoutError:
-                print(f"ArxivConnector: Timeout while fetching results. Processed {len(results)}/{len(papers) if 'papers' in locals() else '?'} papers before timeout")
-                return results
+                print(f"ArxivConnector: Timeout while fetching results")
+                return []
             except Exception as e:
                 print(f"ArxivConnector: Error processing results: {str(e)}")
-                return results
+                return []
             
         except Exception as e:
             print(f"ArxivConnector: Top-level error: {str(e)}")

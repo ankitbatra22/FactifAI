@@ -22,6 +22,8 @@ class GoogleSearchResult:
     snippet: str
     domain: str
     featured_snippet: Optional[str] = None
+    source: Optional[str] = None
+    date: Optional[str] = None
 
 class GoogleSearchService:
     """Service to handle Google search operations"""
@@ -259,13 +261,57 @@ class GoogleSearchService:
                 if not domain or not self.is_valid_source(domain):
                     logger.debug(f"Invalid domain: {domain}")
                     continue
+
+                # Extract date if available
+                date = None
+                date_selectors = [
+                    'span.MUxGbd.wuQ4Ob.WZ8Tjf',  # Common date class
+                    'span.r0bn4c.rQMQod',         # New date format
+                    'span[class*="MUxGbd"]',      # Broader date class match
+                    'span[class*="date"]',
+                    'time'
+                ]
+
+                for date_selector in date_selectors:
+                    date_elem = result.select_one(date_selector)
+                    if date_elem:
+                        date_text = date_elem.get_text().strip()
+                        # Clean up date format (e.g., "Feb 14, 2022 —" -> "Feb 14, 2022")
+                        if "—" in date_text:
+                            date = date_text.split("—")[0].strip()
+                        else:
+                            date = date_text
+                        break
+
+                # Extract source if available
+                source = None
+                source_selectors = [
+                    'span.VuuXrf',              # Primary source class
+                    'div.TbwUpd.NJjxre cite',   # New source format
+                    'div[class*="source"] cite',
+                    'cite.iUh30',               # Common cite class
+                    'cite'
+                ]
+
+                for source_selector in source_selectors:
+                    source_elem = result.select_one(source_selector)
+                    if source_elem:
+                        source_text = source_elem.get_text().strip()
+                        # Clean up source format (e.g., "https://www.example.com › path" -> "example.com")
+                        if "›" in source_text:
+                            source = source_text.split("›")[0].strip()
+                        else:
+                            source = source_text
+                        break
                 
                 search_results.append(GoogleSearchResult(
                     title=title,
                     link=link,
                     snippet=snippet,
                     domain=domain,
-                    featured_snippet=None  # We'll handle this separately
+                    featured_snippet=None,
+                    source=source,
+                    date=date
                 ))
                 
                 if len(search_results) >= self.num_results:

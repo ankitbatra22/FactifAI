@@ -1,6 +1,7 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from openai import AsyncOpenAI
 from app.services.search.google_search import GoogleSearchResult
+from app.services.search.serp_search import SerpSearchResult
 from app.config import settings
 from app.schemas.research_summary import ResearchSummary
 
@@ -31,7 +32,7 @@ class LLMService:
             You are a factual research assistant that provides accurate, well-sourced information.
             Analyze the provided search results and generate a structured response that:
             1. Summarizes the key findings
-            2. Lists specific claims with their sources
+            2. Lists specific claims with their title, sources, and dates
             
             Focus on verifiable facts from reputable sources. Don't include the AI overview in the summary.
             """},
@@ -62,7 +63,7 @@ class LLMService:
                 error=str(e)
             )
     
-    def _prepare_context(self, results: List[GoogleSearchResult]) -> str:
+    def _prepare_context(self, results: List[Union[SerpSearchResult, GoogleSearchResult]]) -> str:
         """Format search results as context for the LLM"""
         if not results:
             return "No search results available."
@@ -75,5 +76,7 @@ class LLMService:
             URL: {result.link}
             Domain: {result.domain}
             Content: {result.snippet}
+            Source Name: {result.source}
+            Source Date: {result.date}
             """)
         return "\n".join(context) 

@@ -7,18 +7,8 @@ from app.services.search.search import SearchService
 from app.services.ingestion.sources.base import BaseSourceConnector
 from app.config import settings
 from app.services.ingestion.sources.arxiv import ArxivConnector
-from app.services.ingestion.sources.pubmed import PubMedConnector
-from app.services.ingestion.sources.crossref import CrossrefConnector
 from app.services.ingestion.sources.open_alex import OpenAlexConnector
 from app.schemas.paper import Paper
-
-# TODO: Future Sources
-# from app.services.ingestion.sources.semantic_scholar import SemanticScholarConnector
-# from app.services.ingestion.sources.science_direct import ScienceDirectConnector
-# from app.services.ingestion.sources.springer import SpringerConnector
-# from app.services.ingestion.sources.wikipedia import WikipediaConnector
-# from app.services.ingestion.sources.news_api import NewsAPIConnector
-# from app.services.ingestion.sources.research_gate import ResearchGateConnector
 
 class SearchPipeline:
     sources = {
@@ -28,12 +18,7 @@ class SearchPipeline:
         'open_alex': OpenAlexConnector(),  # ~100 results
         
         # TODO: Future Sources
-        # 'semantic_scholar': SemanticScholarConnector(),  # ~100 results
-        # 'science_direct': ScienceDirectConnector(),  # ~100 results
-        # 'springer': SpringerConnector(),     # ~100 results
-        # 'wikipedia': WikipediaConnector(),   # ~20 results
-        # 'news_api': NewsAPIConnector(),      # ~50 results
-        # 'research_gate': ResearchGateConnector()  # ~100 results
+        # ... existing comments ...
     }
     
     def __init__(self):
@@ -82,7 +67,7 @@ class SearchPipeline:
         Fetch up to max_results from a single source
         """
         try:
-            papers: List[Paper] = await connector.fetch_papers(query, max_results=max_results)
+            papers = await connector.fetch_papers(query, max_results=max_results)
             print(f"Fetched {len(papers)} papers from {source_name}")
             
             # Convert Paper objects to dict with only needed fields

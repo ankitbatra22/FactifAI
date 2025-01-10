@@ -69,12 +69,9 @@ class OpenAlexConnector(BaseSourceConnector):
                 'select': 'id,title,abstract_inverted_index,authorships,publication_year,cited_by_count,type,open_access,doi,concepts'
             }
             
-            print(f"\nQuerying OpenAlex: {self.base_url}")
-            
             async with session.get(self.base_url, params=params) as response:
                 if response.status == 200:
                     data = await response.json()
-                    print(f"\nGot response from OpenAlex. Found {len(data.get('results', []))} results")
                     results = []
                     
                     for work in data.get('results', []):
@@ -85,7 +82,7 @@ class OpenAlexConnector(BaseSourceConnector):
                             )
                             clean_abstract = self.clean_abstract(raw_abstract)
                             
-                            if len(clean_abstract) < 20:  # Skip if abstract is too short after cleaning
+                            if len(clean_abstract) < 50:
                                 continue
                                 
                             # Extract author names
@@ -103,7 +100,9 @@ class OpenAlexConnector(BaseSourceConnector):
                                     authors=authors,
                                     year=work.get('publication_year'),
                                     citations=work.get('cited_by_count'),
+                                    type=work.get('type'),
                                     abstract=clean_abstract,
+                                    doi=work.get('doi'),
                                     categories=[c.get('display_name', '') for c in work.get('concepts', [])]
                                 )
                             )
@@ -113,12 +112,9 @@ class OpenAlexConnector(BaseSourceConnector):
                             print(f"Error processing work: {e}")
                             continue
                     
-                    print(f"Successfully processed {len(results)} papers")
                     return results
                     
-                else:
-                    print(f"Error from OpenAlex API: {response.status}")
-                    return []
+                return []
                     
         except Exception as e:
             print(f"Error fetching from OpenAlex: {str(e)}")

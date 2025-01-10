@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict
+from typing import List
 import asyncio
 import aiohttp
-from app.config import settings
+from app.schemas.paper import Paper
 
 class BaseSourceConnector(ABC):
     def __init__(self):
@@ -15,19 +15,9 @@ class BaseSourceConnector(ABC):
         return self.session
     
     @abstractmethod
-    async def fetch_papers(self, query: str, max_results: int = 100) -> List[Dict]:
-        """
-        Fetch papers from the source
-        Returns list of documents in format:
-        {
-            'id': str,
-            'title': str,
-            'content': str,
-            'url': str,
-            'source': str
-        }
-        """
+    async def fetch_papers(self, query: str, max_results: int = 100) -> List[Paper]:
+        """Fetch papers from the source"""
         pass
     
     async def rate_limit_wait(self):
-        await asyncio.sleep(self.rate_limit) 
+        await asyncio.sleep(self.rate_limit)

@@ -2,6 +2,7 @@ import pytest
 from app.services.search.google_search import GoogleSearchService, GoogleSearchResult
 from typing import List
 import re
+from app.services.search.constants import EXCLUDED_DOMAINS
 
 @pytest.mark.asyncio
 async def test_google_search():
@@ -27,6 +28,8 @@ async def test_google_search():
         print(f"Domain: {result.domain}")
         print(f"URL: {result.link}")
         print(f"Snippet: {result.snippet}")
+        print(f"Source: {result.source}")
+        print(f"Date: {result.date}")
         print("-" * 50)
 
 
@@ -40,7 +43,7 @@ async def test_excluded_domains():
     
     # Check that no results are from excluded domains
     for result in results:
-        assert result.domain not in service.EXCLUDED_DOMAINS, f"Found excluded domain: {result.domain}"
+        assert result.domain not in EXCLUDED_DOMAINS, f"Found excluded domain: {result.domain}"
 
 @pytest.mark.asyncio
 async def test_error_handling():
