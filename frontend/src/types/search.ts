@@ -2,7 +2,11 @@ export interface ResearchPaper {
   title: string;
   summary: string;
   url: string;
-  confidence?: number;
+  categories: string[];
+  authors: string[];
+  year: number;
+  confidence: number;
+  source: string;
 }
 
 export interface WebSummary {

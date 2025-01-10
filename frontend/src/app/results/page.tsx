@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { SearchLoading } from '../../components/search/SearchLoading';
 import { searchPapers } from '@/lib/api';
 import type { SearchResponse } from '@/types/search';
+import { PaperCard } from '@/components/PaperCard';
 
 export const dynamic = 'force-dynamic';
 const CACHE_KEY_PREFIX = 'search_results_';
@@ -138,9 +139,23 @@ function ResultsContent() {
                 </p>
               </div>
 
+              {/* Research Papers */}
+              <div className="space-y-4 mb-8">
+                <h2 className="text-lg font-medium text-white/90">
+                  Relevant Research Papers
+                </h2>
+                <div className="grid gap-4">
+                  {results.papers.map((paper, index) => (
+                    <PaperCard key={index} paper={paper} />
+                  ))}
+                </div>
+              </div>
+
               {/* Key Findings with Citations */}
               <div className="space-y-4">
-                <h2 className="text-lg font-medium text-white/90">Key Findings</h2>
+                <h2 className="text-lg font-medium text-white/90">
+                  Reliable Web Search Findings
+                </h2>
                 <div className="grid gap-4">
                   {results.web_summary.findings.slice(0, 3).map((finding, index) => (
                     <div 
@@ -164,40 +179,6 @@ function ResultsContent() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                         </a>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Research Papers */}
-              <div className="space-y-4">
-                <h2 className="text-lg font-medium text-white/90">Relevant Research Papers</h2>
-                <div className="grid gap-4">
-                  {results.papers.map((paper, index) => (
-                    <div 
-                      key={index}
-                      className="bg-gray-800/50 rounded-lg p-4 hover:bg-gray-800/70 transition-colors"
-                    >
-                      <div className="flex flex-col gap-2">
-                        <div className="flex justify-between items-start gap-4">
-                          <h3 className="text-white/90 font-medium">
-                            {paper.title}
-                          </h3>
-                          <a
-                            href={paper.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-shrink-0 text-blue-400 hover:text-blue-300 transition-colors"
-                          >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        </div>
-                        <p className="text-sm text-gray-400">
-                          {paper.summary}
-                        </p>
                       </div>
                     </div>
                   ))}
