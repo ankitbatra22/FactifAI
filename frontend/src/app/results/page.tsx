@@ -134,7 +134,7 @@ function ResultsContent() {
               <div className="space-y-4">
                 <div className="border-l-4 border-blue-500 pl-4">
                   <h2 className="text-lg font-semibold text-white/90 tracking-wide">
-                    FactifAI's Research-Backed Answer:
+                    FactifAI&apos;s Research-Backed Answer:
                   </h2>
                 </div>
                 <div className="prose prose-invert max-w-none">
