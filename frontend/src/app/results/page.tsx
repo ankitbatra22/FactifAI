@@ -7,6 +7,7 @@ import { SearchLoading } from '../../components/search/SearchLoading';
 import { searchPapers } from '@/lib/api';
 import type { SearchResponse } from '@/types/search';
 import { PaperCard } from '@/components/PaperCard';
+import { FindingCard } from '@/components/FindingCard';
 
 export const dynamic = 'force-dynamic';
 const CACHE_KEY_PREFIX = 'search_results_';
@@ -158,29 +159,15 @@ function ResultsContent() {
                 </h2>
                 <div className="grid gap-4">
                   {results.web_summary.findings.slice(0, 3).map((finding, index) => (
-                    <div 
+                    <FindingCard 
                       key={index}
-                      className="bg-gray-800/50 rounded-lg p-4 hover:bg-gray-800/70 transition-colors"
-                    >
-                      <div className="flex justify-between gap-4">
-                        <div className="space-y-2">
-                          <p className="text-gray-200">{finding.text}</p>
-                          <p className="text-sm text-gray-400">
-                            Source: {new URL(finding.source_url).hostname}
-                          </p>
-                        </div>
-                        <a
-                          href={finding.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-shrink-0 text-blue-400 hover:text-blue-300 transition-colors"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
+                      title={finding.title}
+                      text={finding.text}
+                      source_url={finding.source_url}
+                      domain={finding.domain}
+                      source_name={finding.source_name}
+                      source_date={finding.source_date}
+                    />
                   ))}
                 </div>
               </div>

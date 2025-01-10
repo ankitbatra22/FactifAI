@@ -72,7 +72,7 @@ export function PaperCard({ paper }: PaperCardProps) {
         {/* Authors with label */}
         {paper.authors && paper.authors.length > 0 && (
           <p className="text-sm">
-            <span className="text-gray-300 font-medium">Authors: </span>
+            <span className="text-gray-300 font-medium">Author(s): </span>
             <span className="text-gray-400">
               {paper.authors.slice(0, 3).join(', ')}
               {paper.authors.length > 3 && ' et al.'}

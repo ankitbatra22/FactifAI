@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const EXAMPLE_QUERIES = [
   { icon: "🌱", text: "Can Plants Communicate?" },
   { icon: "🐄", text: "Can Cows Make Friends?" },
-  { icon: "🤖", text: "Can robots foster genuine human connections?" },
+  { icon: "🧘", text: "What are the effects of meditation on stress?" },
   { icon: "🎮", text: "Do video games improve cognitive skills?" },
 ];
 

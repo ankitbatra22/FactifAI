@@ -12,8 +12,12 @@ export interface ResearchPaper {
 export interface WebSummary {
   summary: string;
   findings: Array<{
+    title: string;
     text: string;
     source_url: string;
+    domain: string;
+    source_name?: string;
+    source_date?: string;
   }>;
   error: string | null;
 }
