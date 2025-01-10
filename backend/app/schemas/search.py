@@ -9,6 +9,10 @@ class ResearchPaper(BaseModel):
     summary: str
     url: str
     confidence: float
+    source: str
+    categories: List[str]
+    authors: List[str]
+    year: int
 
 class SearchResponse(BaseModel):
     is_valid: bool

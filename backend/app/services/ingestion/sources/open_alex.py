@@ -3,6 +3,8 @@ import aiohttp
 import re
 from app.services.ingestion.sources.base import BaseSourceConnector
 from app.config import settings
+from app.schemas.paper import Paper, PaperMetadata
+from datetime import datetime
 
 class OpenAlexConnector(BaseSourceConnector):
     def __init__(self):
@@ -57,8 +59,7 @@ class OpenAlexConnector(BaseSourceConnector):
         
         return text.strip()
 
-    async def fetch_papers(self, query: str, max_results: int = 100) -> List[Dict]:
-        """Fetch papers from OpenAlex based on query"""
+    async def fetch_papers(self, query: str, max_results: int = 100) -> List[Paper]:
         try:
             session = await self.get_session()
             params = {
@@ -69,7 +70,6 @@ class OpenAlexConnector(BaseSourceConnector):
             }
             
             print(f"\nQuerying OpenAlex: {self.base_url}")
-            print(f"Params: {params}")
             
             async with session.get(self.base_url, params=params) as response:
                 if response.status == 200:
@@ -85,46 +85,28 @@ class OpenAlexConnector(BaseSourceConnector):
                             )
                             clean_abstract = self.clean_abstract(raw_abstract)
                             
-                            if len(clean_abstract) < 50:  # Skip if abstract is too short after cleaning
+                            if len(clean_abstract) < 20:  # Skip if abstract is too short after cleaning
                                 continue
                                 
-                            # Extract authors
-                            authors = []
-                            for authorship in work.get('authorships', []):
-                                author = authorship.get('author', {})
-                                institutions = [
-                                    inst.get('display_name', '')
-                                    for inst in authorship.get('institutions', [])
-                                ]
-                                authors.append({
-                                    'name': author.get('display_name', ''),
-                                    'affiliations': institutions
-                                })
+                            # Extract author names
+                            authors = [
+                                authorship.get('author', {}).get('display_name', '')
+                                for authorship in work.get('authorships', [])
+                                if authorship.get('author', {}).get('display_name')
+                            ]
                             
-                            # Format content
-                            content = (
-                                f"Abstract:\n{clean_abstract}\n\n"
-                                f"Authors:\n" + '\n'.join(f"- {author['name']}" for author in authors) + "\n\n"
-                                f"Year: {work.get('publication_year', '')}\n"
-                                f"Citations: {work.get('cited_by_count', 0)}"
+                            # Create paper with metadata
+                            paper = Paper(
+                                title=work.get('title', ''),
+                                url=f"https://doi.org/{work['doi']}" if work.get('doi') else '',
+                                metadata=PaperMetadata(
+                                    authors=authors,
+                                    year=work.get('publication_year'),
+                                    citations=work.get('cited_by_count'),
+                                    abstract=clean_abstract,
+                                    categories=[c.get('display_name', '') for c in work.get('concepts', [])]
+                                )
                             )
-                            
-                            paper = {
-                                'id': f"openalex_{work['id']}",
-                                'title': work.get('title', ''),
-                                'content': content,
-                                'url': f"https://doi.org/{work['doi']}" if work.get('doi') else '',
-                                'source': 'openalex',
-                                'metadata': {
-                                    'authors': authors,
-                                    'year': work.get('publication_year'),
-                                    'citations': work.get('cited_by_count', 0),
-                                    'type': work.get('type'),
-                                    'abstract': clean_abstract,
-                                    'concepts': work.get('concepts', []),
-                                    'doi': work.get('doi')
-                                }
-                            }
                             results.append(paper)
                             
                         except Exception as e:

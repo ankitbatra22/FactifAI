@@ -10,6 +10,7 @@ from app.services.ingestion.sources.arxiv import ArxivConnector
 from app.services.ingestion.sources.pubmed import PubMedConnector
 from app.services.ingestion.sources.crossref import CrossrefConnector
 from app.services.ingestion.sources.open_alex import OpenAlexConnector
+from app.schemas.paper import Paper
 
 # TODO: Future Sources
 # from app.services.ingestion.sources.semantic_scholar import SemanticScholarConnector
@@ -22,8 +23,8 @@ from app.services.ingestion.sources.open_alex import OpenAlexConnector
 class SearchPipeline:
     sources = {
         'arxiv': ArxivConnector(),          # ~100 results
-        #'pubmed': PubMedConnector(),        # ~100 results  # temporarily disabled
-        'crossref': CrossrefConnector(),    # ~100 results
+        #'pubmed': PubMedConnector(),        # ~100 results  # temporarily disabled (poor results)
+        #'crossref': CrossrefConnector(),    # ~100 results  # temporarily disabled (inconsistent results/lacking information)
         'open_alex': OpenAlexConnector(),  # ~100 results
         
         # TODO: Future Sources
@@ -43,7 +44,7 @@ class SearchPipeline:
     async def search(self, query: str, top_k: int = 3) -> List[Dict]:
         """
         Real-time search across all sources
-        Expected total: ~600-700 results to process
+        Expected total: ~200-300 results to process
         """
         start_time = datetime.now()
         
@@ -75,15 +76,26 @@ class SearchPipeline:
         source_name: str, 
         connector: BaseSourceConnector, 
         query: str,
-        max_results: int = 50  # Default to 100 results per source
+        max_results: int = 50
     ) -> List[Dict]:
         """
         Fetch up to max_results from a single source
         """
         try:
-            documents = await connector.fetch_papers(query, max_results=max_results)
-            print(f"Fetched {len(documents)} documents from {source_name}")
-            return documents
+            papers: List[Paper] = await connector.fetch_papers(query, max_results=max_results)
+            print(f"Fetched {len(papers)} papers from {source_name}")
+            
+            # Convert Paper objects to dict with only needed fields
+            return [{
+                'title': paper.title,
+                'abstract': paper.metadata.abstract,
+                'url': paper.url,
+                'source': source_name,
+                'categories': paper.metadata.categories,
+                'authors': paper.metadata.authors,
+                'year': paper.metadata.year
+            } for paper in papers]
+            
         except Exception as e:
             print(f"Error fetching from {source_name}: {str(e)}")
             return []
@@ -127,7 +139,7 @@ class SearchPipeline:
         # Process embeddings in parallel for the batch
         embedding_tasks = []
         for doc in documents:
-            doc_text = f"{doc['title']} {doc['content'][:1000]}"
+            doc_text = f"{doc['title']} {doc['abstract'][:1000]}"
             task = asyncio.create_task(
                 self._get_embedding_async(doc_text)
             )
@@ -142,13 +154,8 @@ class SearchPipeline:
                     doc_embedding
                 )
                 
-                scored_docs.append({
-                    'title': doc['title'],
-                    'content': doc['content'],
-                    'url': doc['url'],
-                    'source': doc['source'],
-                    'score': similarity
-                })
+                doc['score'] = similarity
+                scored_docs.append(doc)
             except Exception as e:
                 print(f"Error processing document: {str(e)}")
                 continue
@@ -174,7 +181,7 @@ class SearchPipeline:
         embeddings = []
         
         # Title + Abstract embedding
-        title_abstract = f"{doc['title']} {doc['content'][:1000]}"
+        title_abstract = f"{doc['title']} {doc['abstract'][:1000]}"
         embeddings.append({
             'vector': self.embedding_service.get_embedding(title_abstract),
             'section': 'title_abstract'

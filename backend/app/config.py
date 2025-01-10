@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     PINECONE_INDEX: str
 
     # Arxiv Settings
-    ARXIV_RATE_LIMIT: float = Field(default=3.0)
+    ARXIV_RATE_LIMIT: float = Field(default=1.5)
     
     # PubMed Settings
     PUBMED_EMAIL: str = Field(default="")  # Made optional with default empty string

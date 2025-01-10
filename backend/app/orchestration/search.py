@@ -33,10 +33,6 @@ class SearchOrchestrator:
 
         # 2. Run academic search and web search in parallel
         async def academic_search():
-            # results = []
-            # for term in processed.processed_result.academic_terms:
-            #     papers = await self.search_pipeline.search(term)
-            #     results.extend(papers)
             papers = await self.search_pipeline.search(processed.processed_result.academic_term)
             return papers
 
@@ -58,9 +54,13 @@ class SearchOrchestrator:
         papers = [
             ResearchPaper(
                 title=paper['title'],
-                summary=f"{paper['content'][:500]}...",  # Preview
+                summary=f"{paper['abstract'][:500]}...",  # Preview
                 url=paper['url'],
-                confidence=paper['score']
+                confidence=paper['score'],
+                source=paper['source'],
+                categories=paper['categories'],
+                authors=paper['authors'],
+                year=paper['year']
             )
             for paper in academic_results
         ]

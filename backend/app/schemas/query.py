@@ -8,12 +8,6 @@ class ProcessedQueryLLM(BaseModel):
         None,
         description="The academic term derived from the query. Only provide if is_valid=true.",
     )
-    # academic_terms: Optional[List[str]] = Field(
-    #     None,
-    #     description="List of academic search terms derived from the query. Only provide if is_valid=true.",
-    #     min_items=1,
-    #     max_items=2,
-    # )
 
 class ProcessedQuery(BaseModel):
     """Full query processing result"""

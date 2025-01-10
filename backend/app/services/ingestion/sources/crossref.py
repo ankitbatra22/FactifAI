@@ -42,6 +42,7 @@ class CrossrefConnector(BaseSourceConnector):
             async with session.get(self.base_url, params=params) as response:
                 if response.status == 200:
                     data = await response.json()
+                    #print(f"Data: {json.dumps(data, indent=2)}")
                     results = []
                     
                     for work in data['message'].get('items', []):
