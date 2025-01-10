@@ -108,15 +108,12 @@ function ResultsContent() {
           </div>
         ) : results ? (
           <div className="space-y-12">
-            {/* Updated header section */}
+            {/* Header section */}
             <div className="flex items-start justify-between border-b border-gray-800 pb-6">
               <div className="space-y-1">
                 <h1 className="text-3xl font-medium text-white/90">
                   {query}
                 </h1>
-                <p className="text-sm text-gray-400">
-                  Research-backed answer
-                </p>
               </div>
               <button
                 onClick={() => router.push('/')}
@@ -132,12 +129,19 @@ function ResultsContent() {
               </button>
             </div>
 
-            {/* Web Summary */}
+            {/* Web Summary with enhanced header */}
             <div className="space-y-8">
-              <div className="prose prose-invert max-w-none">
-                <p className="text-lg leading-relaxed text-gray-200">
-                  {results.web_summary.summary}
-                </p>
+              <div className="space-y-4">
+                <div className="border-l-4 border-blue-500 pl-4">
+                  <h2 className="text-lg font-semibold text-white/90 tracking-wide">
+                    FactifAI's Research-Backed Answer:
+                  </h2>
+                </div>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-lg leading-relaxed text-gray-200">
+                    {results.web_summary.summary}
+                  </p>
+                </div>
               </div>
 
               {/* Research Papers */}
