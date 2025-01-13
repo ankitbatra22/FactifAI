@@ -45,7 +45,7 @@ class ArxivConnector(BaseSourceConnector):
                                 categories=paper.categories
                             )
                         )
-                        for paper in papers[:max_results]
+                        for paper in papers
                     ]
                     
                     print(f"ArxivConnector: Successfully processed {len(results)} papers")
