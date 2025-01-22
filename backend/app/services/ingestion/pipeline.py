@@ -67,7 +67,7 @@ class SearchPipeline:
         Fetch up to max_results from a single source
         """
         try:
-            papers = await connector.fetch_papers(query, max_results=max_results)
+            papers: List[Paper] = await connector.fetch_papers(query, max_results=max_results)
             print(f"Fetched {len(papers)} papers from {source_name}")
             
             # Convert Paper objects to dict with only needed fields
@@ -158,29 +158,6 @@ class SearchPipeline:
         Calculate cosine similarity between two embeddings
         """
         return sum(a * b for a, b in zip(embedding1, embedding2)) / (sum(a**2 for a in embedding1) * sum(b**2 for b in embedding2))
-
-    async def _create_document_embeddings(self, doc: Dict) -> List[Dict]:
-        """
-        Create multiple embeddings for different parts of the document
-        """
-        embeddings = []
-        
-        # Title + Abstract embedding
-        title_abstract = f"{doc['title']} {doc['abstract'][:1000]}"
-        embeddings.append({
-            'vector': self.embedding_service.get_embedding(title_abstract),
-            'section': 'title_abstract'
-        })
-        
-        # Full content embeddings (chunked)
-        content_chunks = self._chunk_content(doc['content'])
-        for chunk in content_chunks:
-            embeddings.append({
-                'vector': self.embedding_service.get_embedding(chunk),
-                'section': 'full_text'
-            })
-        
-        return embeddings
 
     def _chunk_content(self, content: str, chunk_size: int = 1000):
         """
