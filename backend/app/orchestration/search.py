@@ -22,6 +22,7 @@ class SearchOrchestrator:
 
     async def search(self, query: str) -> SearchResponse:
         # 1. Process and validate query
+        print(f"User entered query: {query}")
         processed = await self.query_processor.process_query(query)
         
         if not processed.processed_result.is_valid:
